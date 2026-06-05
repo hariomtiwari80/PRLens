@@ -138,13 +138,15 @@ const Navbar = () => {
                 whileTap={{ scale: 0.96 }}
               >
 
-                <Button
-                  onClick={() => setOpenNavbarModal(true)}
-                  className="bg-gradient-to-r from-saas-orange to-orange-600 hover:opacity-90 text-white rounded-xl px-5 py-6 flex items-center gap-2 shadow-xl shadow-orange-500/20 transition-all duration-300"
-                >
-                  <Github size={18} />
-                  Connect GitHub
-                </Button>
+                  <Button
+                    type="button"
+                    aria-label="Connect GitHub"
+                    onClick={() => setOpenNavbarModal(true)}
+                    className="bg-gradient-to-r from-saas-orange to-orange-600 hover:opacity-90 text-white rounded-xl px-5 py-6 flex items-center gap-2 shadow-xl shadow-orange-500/20 transition-all duration-300"
+                  >
+                    <Github size={18} />
+                    Connect GitHub
+                  </Button>
 
               </motion.div>
 
@@ -153,6 +155,8 @@ const Navbar = () => {
             <div className="md:hidden flex items-center">
 
               <button
+                type="button"
+                aria-label={isOpen ? "Close menu" : "Open menu"}
                 onClick={toggleMenu}
                 className="relative z-50 inline-flex items-center justify-center w-11 h-11 rounded-xl text-white bg-white/5 border border-white/10"
               >
@@ -267,6 +271,8 @@ const Navbar = () => {
                 >
 
                   <Button
+                    type="button"
+                    aria-label="Connect GitHub"
                     onClick={() => {
                       setOpenNavbarModal(true);
                       setIsOpen(false);
