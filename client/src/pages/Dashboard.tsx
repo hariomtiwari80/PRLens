@@ -15,12 +15,31 @@ import PageTransition from "@/components/PageTransition";
 interface RepositoryType {
   id: number;
   name: string;
+  fullName: string;
   description: string;
+
   language: string;
-  stargazers_count: number;
-  updated_at: string;
+
+  stars: number;
+  forks: number;
+  watchers: number;
+  openIssues: number;
+
+  // API uses updatedAt/stargazers_count/etc in different places; keep UI-friendly fields optional.
+  stargazers_count?: number;
+  updated_at?: string;
+  stargazersCount?: number;
+  updatedAt?: string;
+
+
+  createdAt: string;
+  updatedAt: string;
+
+  htmlUrl: string;
+
   owner: {
     login: string;
+    avatar: string;
   };
 }
 
@@ -50,9 +69,17 @@ const Dashboard = () => {
         );
         
 
+        const repos = repoResponse.data?.repositories;
+        if (!Array.isArray(repos)) {
+          throw new Error("Unexpected /api/repos response shape");
+        }
+
         const uniqueRepos = Array.from(
           new Map(
-            repoResponse.data.map((repo: RepositoryType) => [repo.id, repo])
+            repos.map((repo: RepositoryType) => [
+              repo.id,
+              repo,
+            ])
           ).values()
         );
 
@@ -69,9 +96,19 @@ const Dashboard = () => {
             }
           );
 
+          const pulls = prResponse.data?.pulls;
+          if (!Array.isArray(pulls)) {
+            throw new Error(
+              "Unexpected /api/repos/:owner/:repo/pulls response shape"
+            );
+          }
+
           const uniquePRs = Array.from(
             new Map(
-              prResponse.data.map((pr: PullRequestType) => [pr.id, pr])
+              pulls.map((pr: PullRequestType) => [
+                pr.id,
+                pr,
+              ])
             ).values()
           );
 
@@ -236,7 +273,8 @@ const Dashboard = () => {
                               <div className="flex items-center gap-2">
                                 <Star className="h-4 w-4" />
 
-                                {repo.stargazers_count}
+                                {repo.stargazers_count ?? repo.stars ?? 0}
+
                               </div>
                             </div>
                           </div>
@@ -244,8 +282,9 @@ const Dashboard = () => {
                           <div className="shrink-0 text-xs text-gray-500 sm:text-sm">
                             Updated{" "}
                             {new Date(
-                              repo.updated_at
+                              repo.updated_at ?? repo.updatedAt ?? ""
                             ).toLocaleDateString()}
+
                           </div>
                         </div>
                       </a>
