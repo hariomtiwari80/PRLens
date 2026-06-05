@@ -139,7 +139,7 @@ const GithubModal = ({
                 <button 
                     onClick={() => {
                         window.location.href =
-                        "http://localhost:5000/api/auth/github";
+                        `${import.meta.env.VITE_API_URL}/api/auth/github`;
                     }}
                     className="w-full h-12 sm:h-14 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm sm:text-base font-semibold flex items-center justify-center gap-3 hover:opacity-90 transition-all duration-300 shadow-xl shadow-orange-500/20">
 
