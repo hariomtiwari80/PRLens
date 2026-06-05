@@ -125,10 +125,9 @@ const githubCallback = async (req, res) => {
 };
 
 const getCurrentUser = async (req, res) => {
-  return res.status(200).json({
-    success: true,
-    user: req.user,
-  });
+  return res.redirect(
+    `${process.env.CLIENT_URL}/dashboard`
+  );
 };
 
 const logoutUser = async (req, res) => {
