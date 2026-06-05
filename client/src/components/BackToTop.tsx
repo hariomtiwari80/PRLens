@@ -33,7 +33,9 @@ const BackToTop = () => {
           className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-4"
         >
 
-          <motion.button
+<motion.button
+            type="button"
+            aria-label="Back to top"
             whileHover={{ scale: 1.05 }}
             className="px-5 py-3 rounded-2xl border border-white/10 bg-[#111111]/90 backdrop-blur-xl text-white text-sm font-medium shadow-xl"
             onClick={scrollToTop}
@@ -41,7 +43,9 @@ const BackToTop = () => {
             Back to top
           </motion.button>
 
-            <motion.button
+<motion.button
+            type="button"
+            aria-label="Back to top"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={scrollToTop}

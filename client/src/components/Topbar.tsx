@@ -39,7 +39,11 @@ const Topbar = () => {
 
         <ThemeToggle />
 
-        <button className="relative w-12 h-12 rounded-2xl bg-[#111113] border border-white/5 flex items-center justify-center hover:bg-white/5 transition-all duration-300 shrink-0">
+<button
+          type="button"
+          aria-label="Notifications"
+          className="relative w-12 h-12 rounded-2xl bg-[#111113] border border-white/5 flex items-center justify-center hover:bg-white/5 transition-all duration-300 shrink-0"
+        >
 
           <Bell className="w-5 h-5" />
 

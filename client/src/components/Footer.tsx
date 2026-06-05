@@ -65,6 +65,7 @@ const Footer = () => {
               <motion.a
                 whileHover={{ y: -3 }}
                 href="#"
+                aria-label="Twitter"
                 className="text-white hover:text-orange-500 transition-all duration-300"
               >
                 <Twitter className="w-5 h-5" />
@@ -73,6 +74,7 @@ const Footer = () => {
               <motion.a
                 whileHover={{ y: -3 }}
                 href="#"
+                aria-label="GitHub"
                 className="text-white hover:text-orange-500 transition-all duration-300"
               >
                 <Github className="w-5 h-5" />
@@ -81,6 +83,7 @@ const Footer = () => {
               <motion.a
                 whileHover={{ y: -3 }}
                 href="#"
+                aria-label="LinkedIn"
                 className="text-white hover:text-orange-500 transition-all duration-300"
               >
                 <Linkedin className="w-5 h-5" />
@@ -219,15 +222,15 @@ const Footer = () => {
 
           <div className="flex items-center gap-6 text-sm text-neutral-500">
 
-            <a href="#" className="hover:text-orange-500 transition">
+            <a href="#" aria-label="Privacy" className="hover:text-orange-500 transition">
               Privacy
             </a>
 
-            <a href="#" className="hover:text-orange-500 transition">
+            <a href="#" aria-label="Terms" className="hover:text-orange-500 transition">
               Terms
             </a>
 
-            <a href="#" className="hover:text-orange-500 transition">
+            <a href="#" aria-label="Security" className="hover:text-orange-500 transition">
               Security
             </a>
 
