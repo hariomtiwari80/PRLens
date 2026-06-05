@@ -35,7 +35,8 @@ const githubCallback = async (req, res) => {
       "https://github.com/login/oauth/access_token",
       {
         client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        client_secret:
+          process.env.GITHUB_CLIENT_SECRET,
         code,
       },
       {
@@ -45,16 +46,26 @@ const githubCallback = async (req, res) => {
       }
     );
 
-    const accessToken = tokenData.access_token;
+    const accessToken =
+      tokenData.access_token;
 
-    const { data: githubUser } = await axios.get(
-      "https://api.github.com/user",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    if (!accessToken) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Failed to get GitHub access token",
+      });
+    }
+
+    const { data: githubUser } =
+      await axios.get(
+        "https://api.github.com/user",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
     let email = githubUser.email;
 
@@ -69,11 +80,15 @@ const githubCallback = async (req, res) => {
           }
         );
 
-        const primary = data.find(
-          (item) => item.primary
-        );
+        const primaryEmail =
+          data.find(
+            (item) =>
+              item.primary &&
+              item.verified
+          );
 
-        email = primary?.email || null;
+        email =
+          primaryEmail?.email || null;
       } catch {
         email = null;
       }
@@ -87,55 +102,114 @@ const githubCallback = async (req, res) => {
       user = await User.create({
         githubId: String(githubUser.id),
         username: githubUser.login,
-        name: githubUser.name || githubUser.login,
+        name:
+          githubUser.name ||
+          githubUser.login,
         email,
-        avatar: githubUser.avatar_url,
+        avatar:
+          githubUser.avatar_url,
         accessToken,
       });
     } else {
-      user.username = githubUser.login;
-      user.name = githubUser.name || githubUser.login;
+      user.username =
+        githubUser.login;
+      user.name =
+        githubUser.name ||
+        githubUser.login;
       user.email = email;
-      user.avatar = githubUser.avatar_url;
-      user.accessToken = accessToken;
+      user.avatar =
+        githubUser.avatar_url;
+      user.accessToken =
+        accessToken;
 
       await user.save();
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(
+      user._id
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: "none",
+      maxAge:
+        7 *
+        24 *
+        60 *
+        60 *
+        1000,
     });
 
     return res.redirect(
       `${process.env.CLIENT_URL}/dashboard`
     );
   } catch (error) {
-    console.error(error);
+    console.error(
+      "GitHub OAuth Error:",
+      error.response?.data ||
+        error.message
+    );
 
     return res.status(500).json({
       success: false,
-      message: "Authentication failed",
+      message:
+        "Authentication failed",
     });
   }
 };
 
-const getCurrentUser = async (req, res) => {
-  return res.redirect(
-    `${process.env.CLIENT_URL}/dashboard`
-  );
+const getCurrentUser = async (
+  req,
+  res
+) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message:
+          "Authentication required",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: req.user._id,
+        githubId:
+          req.user.githubId,
+        username:
+          req.user.username,
+        name: req.user.name,
+        email: req.user.email,
+        avatar: req.user.avatar,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Failed to fetch user",
+    });
+  }
 };
 
-const logoutUser = async (req, res) => {
-  res.clearCookie("token");
+const logoutUser = async (
+  req,
+  res
+) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
 
   return res.status(200).json({
     success: true,
-    message: "Logged out successfully",
+    message:
+      "Logged out successfully",
   });
 };
 
